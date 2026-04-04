@@ -64,7 +64,7 @@ export default function Home() {
     return (
         <main className="container max-w-2xl mx-auto p-4 md:p-8 mt-5">
             <header className="text-center mb-8">
-                <h1 className="text-3xl font-bold text-red-700">🌶️ Seblak Online Order</h1>
+                <h1 className="text-3xl font-bold text-red-700">🌶️ Seblak Mah Uput</h1>
                 <p className="text-gray-600 mt-2">Pilih menu, hitung total, dan kirim via WhatsApp!</p>
             </header>
             
