@@ -5,6 +5,8 @@ export interface MenuItem {
   name: string;
   price: number;
   category: MenuItemCategory;
+  hasLevel?: boolean;
+  hasKuah?: boolean;
 }
 
 export interface ItemQuantities {
@@ -12,12 +14,12 @@ export interface ItemQuantities {
 }
 
 export const menuItems: MenuItem[] = [
-  { id: 1, name: 'Seblak Biasa', price: 6000, category: 'paketan' },
-  { id: 2, name: 'Cigor', price: 7000, category: 'paketan' },
-  { id: 3, name: 'Karedok Basreng', price: 7000, category: 'paketan' },
+  { id: 1, name: 'Seblak Biasa', price: 6000, category: 'paketan', hasLevel: true, hasKuah: true },
+  { id: 2, name: 'Cigor', price: 7000, category: 'paketan', hasLevel: true },
+  { id: 3, name: 'Karedok Basreng', price: 7000, category: 'paketan', hasLevel: true },
   { id: 4, name: 'Mie Ayam', price: 8000, category: 'paketan' },
   { id: 5, name: 'Mie Ayam + Bakso Jumbo', price: 14000, category: 'paketan' },
-  { id: 6, name: 'Bakso Tulang', price: 8000, category: 'paketan' },
+  { id: 6, name: 'Bakso Tulang', price: 8000, category: 'paketan', hasLevel: true },
 
   { id: 7, name: 'Kwetiaw', price: 2000, category: 'topping' },
   { id: 8, name: 'Dumpling Ayam', price: 2000, category: 'topping' },

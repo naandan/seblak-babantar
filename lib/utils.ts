@@ -32,39 +32,89 @@ export const formatRupiah = (number: number): string => {
   }).format(number);
 };
 
-export const generateWhatsAppMessage = (orderSets: NamedOrderSet[], grandTotal: number): string => {
-  let message = '*PESANAN SEBLAK*\n\n';
-  
+export const generateWhatsAppMessage = (
+  orderSets: NamedOrderSet[],
+  grandTotal: number
+): string => {
+  let message = '*PESANAN*\n\n';
+
   orderSets.forEach((set) => {
     const subTotal = calculateTotal(set.quantities);
+
     message += `==== *${set.name} (${formatRupiah(subTotal)})* ====\n`;
-    message += `1. Seblak:\n`;
-    const selectedToppings = menuItems.filter(item => item.category === 'topping' && set.quantities[item.id] > 0);
-    
-    if (selectedToppings.length > 0) {
-        selectedToppings.forEach(item => {
-            message += `- ${item.name} (${set.quantities[item.id]}x)\n`;
-        });
-    } else {
-        message += `- (Tidak ada topping seblak dipilih)\n`;
+
+    const selectedPaketan = menuItems.filter(
+      item => item.category === 'paketan' && set.quantities[item.id] > 0
+    );
+
+    const selectedToppings = menuItems.filter(
+      item => item.category === 'topping' && set.quantities[item.id] > 0
+    );
+
+    const selectedMinuman = menuItems.filter(
+      item => item.category === 'minuman' && set.quantities[item.id] > 0
+    );
+
+    const hasLevelFromBase = selectedPaketan.some(item => item.hasLevel);
+    const hasKuahFromBase = selectedPaketan.some(item => item.hasKuah);
+    const hasTopping = selectedToppings.length > 0;
+
+    const needsLevel = hasLevelFromBase || hasTopping;
+    const needsKuah = hasKuahFromBase || hasTopping;
+
+    let sectionNumber = 1;
+
+    if (selectedPaketan.length > 0) {
+      message += `${sectionNumber}. Menu Utama:\n`;
+      selectedPaketan.forEach(item => {
+        message += `- ${item.name} (${set.quantities[item.id]}x)\n`;
+      });
+      message += `\n`;
+      sectionNumber++;
     }
-    
-    message += `> Level Pedas: ${set.levelPedas || levelPedasOptions[0]}\n`;
-    message += `> Jenis Kuah: ${set.jenisKuah || kuahOptions[0]}\n`;
-    message += `> Varian Kuah: ${set.varianKuah || kuahVariants[0]}\n\n`;
 
+    if (selectedToppings.length > 0) {
+      message += `${sectionNumber}. Topping / Seblak Custom:\n`;
+      selectedToppings.forEach(item => {
+        message += `- ${item.name} (${set.quantities[item.id]}x)\n`;
+      });
+      message += `\n`;
+      sectionNumber++;
+    }
 
-    const selectedMinuman = menuItems.filter(item => item.category === 'minuman' && set.quantities[item.id] > 0);
     if (selectedMinuman.length > 0) {
-        message += `2. Minuman:\n`;
-        selectedMinuman.forEach(item => {
-          message += `- ${item.name} (${set.quantities[item.id]}x)\n`;
-        });
-        message += `\n`;
+      message += `${sectionNumber}. Minuman:\n`;
+      selectedMinuman.forEach(item => {
+        message += `- ${item.name} (${set.quantities[item.id]}x)\n`;
+      });
+      message += `\n`;
+      sectionNumber++;
+    }
+
+    if (needsLevel) {
+      message += `> Level Pedas: ${set.levelPedas || levelPedasOptions[0]}\n`;
+    }
+
+    if (needsKuah) {
+      message += `> Jenis Kuah: ${set.jenisKuah || kuahOptions[0]}\n`;
+      message += `> Varian Kuah: ${set.varianKuah || kuahVariants[0]}\n`;
+    }
+
+    if (needsLevel || needsKuah) {
+      message += `\n`;
+    }
+
+    if (
+      selectedPaketan.length === 0 &&
+      selectedToppings.length === 0 &&
+      selectedMinuman.length === 0
+    ) {
+      message += `- (Tidak ada item dipilih)\n\n`;
     }
   });
 
   message += `\n*Total Keseluruhan: ${formatRupiah(grandTotal)}*\n`;
-  message += `\nMohon konfirmasi ketersediaan dan total biaya pengiriman. Terima kasih!`;
+  message += `\nMohon konfirmasi ketersediaan dan ongkir. Terima kasih!`;
+
   return message;
 };
