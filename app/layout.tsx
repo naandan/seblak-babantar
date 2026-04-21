@@ -9,8 +9,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Seblak Mah Uput",
-  description: "Lakukan pesanan seblak online di Seblak Mah Uput",
+  title: "Seblak Babantar",
+  description: "Lakukan pesanan seblak online di Seblak Babantar",
 };
 
 export default function RootLayout({
