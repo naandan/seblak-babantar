@@ -52,7 +52,7 @@ export default function Home() {
     const handleCheckout = () => {
         if (orderSets.length === 0 || grandTotal === 0) return;
         
-        const phoneNumber = '6282271642385';
+        const phoneNumber = '6281906110071';
         const message = generateWhatsAppMessage(orderSets, grandTotal);
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
