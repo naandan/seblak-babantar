@@ -36,12 +36,14 @@ export const generateWhatsAppMessage = (
   orderSets: NamedOrderSet[],
   grandTotal: number
 ): string => {
+  // Gunakan baris baru yang konsisten
   let message = '*PESANAN*\n\n';
 
   orderSets.forEach((set) => {
     const subTotal = calculateTotal(set.quantities);
-
-    message += `==== *${set.name} (${formatRupiah(subTotal)})* ====\n`;
+    
+    // Pastikan nama tidak mengandung karakter aneh
+    message += `==== *${set.name.trim()} (${formatRupiah(subTotal)})* ====\n`;
 
     const selectedPaketan = menuItems.filter(
       item => item.category === 'paketan' && set.quantities[item.id] > 0
@@ -91,29 +93,20 @@ export const generateWhatsAppMessage = (
       sectionNumber++;
     }
 
+    // Perbaikan spasi pada bagian detail agar tidak terbaca sebagai tag HTML/Markdown yang salah
     if (needsLevel) {
-      message += `> Level Pedas: ${set.levelPedas || levelPedasOptions[0]}\n`;
+      message += `_Level Pedas:_ ${set.levelPedas || levelPedasOptions[0]}\n`;
     }
 
     if (needsKuah) {
-      message += `> Jenis Kuah: ${set.jenisKuah || kuahOptions[0]}\n`;
-      message += `> Varian Kuah: ${set.varianKuah || kuahVariants[0]}\n`;
+      message += `_Jenis Kuah:_ ${set.jenisKuah || kuahOptions[0]}\n`;
+      message += `_Varian Kuah:_ ${set.varianKuah || kuahVariants[0]}\n`;
     }
 
-    if (needsLevel || needsKuah) {
-      message += `\n`;
-    }
-
-    if (
-      selectedPaketan.length === 0 &&
-      selectedToppings.length === 0 &&
-      selectedMinuman.length === 0
-    ) {
-      message += `- (Tidak ada item dipilih)\n\n`;
-    }
+    message += `\n`;
   });
 
-  message += `\n*Total Keseluruhan: ${formatRupiah(grandTotal)}*\n`;
+  message += `*Total Keseluruhan: ${formatRupiah(grandTotal)}*\n`;
   message += `\nMohon konfirmasi ketersediaan dan ongkir. Terima kasih!`;
 
   return message;
